@@ -1,0 +1,2674 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jelajah Sistem Saraf - IPA Kelas 9</title>
+
+<style>
+/* =========================================================
+   RESET & DASAR
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, #dff8ff 0%, transparent 30%),
+        radial-gradient(circle at bottom right, #e8ffe8 0%, transparent 30%),
+        #f5f9fc;
+    color: #17324d;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.app {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.game-container {
+    max-width: 1100px;
+    margin: auto;
+    min-height: calc(100vh - 40px);
+    background: rgba(255,255,255,0.96);
+    border-radius: 28px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+    overflow: hidden;
+    position: relative;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    background: linear-gradient(135deg, #087f9c, #0a9b73);
+    color: white;
+    padding: 18px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 27px;
+}
+
+.logo-text h2 {
+    font-size: 18px;
+}
+
+.logo-text small {
+    opacity: 0.85;
+}
+
+.score-box {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 9px 16px;
+    border-radius: 14px;
+    font-weight: bold;
+}
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-area {
+    display: none;
+    padding: 15px 25px 0;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 7px;
+    color: #527087;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #e6eef3;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ff9f43, #0a9b73);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+}
+
+/* =========================================================
+   SCREEN
+========================================================= */
+
+.screen {
+    display: none;
+    padding: 35px;
+    min-height: 600px;
+    animation: fadeIn 0.4s ease;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   HOME
+========================================================= */
+
+.hero {
+    text-align: center;
+    padding: 30px 15px;
+}
+
+.brain {
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd29d, #ff9f43);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 85px;
+    box-shadow: 0 15px 35px rgba(255,159,67,0.25);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%,100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.hero h1 {
+    margin-top: 25px;
+    font-size: clamp(32px, 6vw, 56px);
+    color: #087f9c;
+}
+
+.hero h3 {
+    margin-top: 8px;
+    color: #0a9b73;
+}
+
+.hero p {
+    max-width: 700px;
+    margin: 18px auto;
+    line-height: 1.7;
+    color: #60798b;
+}
+
+.menu-buttons {
+    max-width: 500px;
+    margin: 25px auto;
+    display: grid;
+    gap: 12px;
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.btn {
+    border: none;
+    border-radius: 15px;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #087f9c, #0a9b73);
+    color: white;
+    box-shadow: 0 7px 18px rgba(8,127,156,0.2);
+}
+
+.btn-orange {
+    background: #ff9f43;
+    color: white;
+}
+
+.btn-light {
+    background: #edf5f8;
+    color: #31566d;
+}
+
+.btn-green {
+    background: #0a9b73;
+    color: white;
+}
+
+.btn-danger {
+    background: #e85d5d;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+    background: white;
+    border: 1px solid #e2edf2;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 7px 25px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    color: #087f9c;
+    margin-bottom: 15px;
+    font-size: 28px;
+}
+
+.center {
+    text-align: center;
+}
+
+/* =========================================================
+   INSTRUCTION
+========================================================= */
+
+.instruction-list {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.instruction-list li {
+    padding: 14px;
+    border-radius: 12px;
+    background: #f1f8fa;
+}
+
+.instruction-list li strong {
+    color: #087f9c;
+}
+
+/* =========================================================
+   MATERIAL
+========================================================= */
+
+.material-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 15px;
+}
+
+.material-card {
+    padding: 20px;
+    border-radius: 18px;
+    background: linear-gradient(135deg,#eefbff,#f3fff8);
+    border-left: 5px solid #087f9c;
+}
+
+.material-card h3 {
+    color: #087f9c;
+    margin-bottom: 8px;
+}
+
+.material-card p {
+    line-height: 1.6;
+    color: #526d7e;
+}
+
+/* =========================================================
+   LEVEL TITLE
+========================================================= */
+
+.level-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.level-number {
+    display: inline-block;
+    background: #ff9f43;
+    color: white;
+    padding: 7px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.level-header h2 {
+    color: #087f9c;
+    font-size: 30px;
+}
+
+.level-header p {
+    color: #688293;
+    margin-top: 8px;
+}
+
+/* =========================================================
+   NEURON VISUAL
+========================================================= */
+
+.neuron-visual {
+    width: 100%;
+    min-height: 250px;
+    background:
+        radial-gradient(circle,#fff3df,#fffaf2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.neuron-svg {
+    width: min(600px,90%);
+    height: 250px;
+}
+
+/* =========================================================
+   ANSWER GRID
+========================================================= */
+
+.answer-grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 14px;
+}
+
+.answer-btn {
+    padding: 17px;
+    border-radius: 14px;
+    border: 2px solid #dce9ef;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #31566d;
+    transition: 0.2s;
+}
+
+.answer-btn:hover {
+    border-color: #087f9c;
+    background: #f1fbfd;
+}
+
+.answer-btn.correct {
+    background: #d9f8e8;
+    border-color: #0a9b73;
+    color: #08734f;
+}
+
+.answer-btn.wrong {
+    background: #ffe0e0;
+    border-color: #e85d5d;
+    color: #a53636;
+}
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+.feedback {
+    display: none;
+    padding: 15px;
+    border-radius: 13px;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+.feedback.show {
+    display: block;
+}
+
+.feedback.correct {
+    background: #dcf8e9;
+    color: #08734f;
+}
+
+.feedback.wrong {
+    background: #ffe1e1;
+    color: #a33838;
+}
+
+/* =========================================================
+   DRAG DROP
+========================================================= */
+
+.drag-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.drag-items {
+    display: grid;
+    gap: 10px;
+}
+
+.drag-item {
+    padding: 14px;
+    background: #e9f7fb;
+    border: 2px dashed #087f9c;
+    border-radius: 12px;
+    cursor: grab;
+    font-weight: bold;
+    text-align: center;
+}
+
+.drop-zone {
+    padding: 15px;
+    border: 2px dashed #b9cdd7;
+    border-radius: 12px;
+    min-height: 65px;
+    margin-bottom: 10px;
+    background: #fafcfd;
+}
+
+.drop-zone strong {
+    display: block;
+    color: #087f9c;
+    margin-bottom: 5px;
+}
+
+.drop-zone.over {
+    background: #e5f9f0;
+    border-color: #0a9b73;
+}
+
+/* =========================================================
+   REFLEX
+========================================================= */
+
+.sequence-area {
+    display: grid;
+    gap: 10px;
+}
+
+.sequence-item {
+    padding: 16px;
+    background: white;
+    border: 2px solid #d9e7ed;
+    border-radius: 13px;
+    cursor: grab;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sequence-item:hover {
+    border-color: #087f9c;
+}
+
+.sequence-number {
+    width: 28px;
+    height: 28px;
+    background: #087f9c;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   HOTS
+========================================================= */
+
+.hots-question {
+    font-size: 19px;
+    line-height: 1.7;
+    font-weight: 600;
+    color: #244c63;
+    margin-bottom: 20px;
+}
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result-card {
+    text-align: center;
+    max-width: 650px;
+    margin: auto;
+}
+
+.result-icon {
+    font-size: 75px;
+    margin-bottom: 15px;
+}
+
+.final-score {
+    font-size: 64px;
+    font-weight: 800;
+    color: #087f9c;
+    margin: 10px 0;
+}
+
+.rank {
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 30px;
+    background: #fff0dc;
+    color: #d87812;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.result-message {
+    color: #60798b;
+    line-height: 1.7;
+    margin: 15px 0 25px;
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.navigation .btn {
+    min-width: 120px;
+}
+
+/* =========================================================
+   QUESTION NUMBER
+========================================================= */
+
+.question-number {
+    font-size: 13px;
+    color: #688293;
+    margin-bottom: 10px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #78909e;
+    font-size: 13px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:700px) {
+
+    .app {
+        padding: 0;
+    }
+
+    .game-container {
+        border-radius: 0;
+        min-height: 100vh;
+    }
+
+    .header {
+        padding: 14px;
+    }
+
+    .screen {
+        padding: 22px 16px;
+        min-height: auto;
+    }
+
+    .answer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .drag-area {
+        grid-template-columns: 1fr;
+    }
+
+    .brain {
+        width: 120px;
+        height: 120px;
+        font-size: 65px;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .navigation {
+        flex-direction: column;
+    }
+
+    .navigation .btn {
+        width: 100%;
+    }
+
+    .score-box {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+<div class="game-container">
+
+<!-- =====================================================
+HEADER
+===================================================== -->
+
+<header class="header">
+
+    <div class="logo-area">
+        <div class="logo">🧠</div>
+
+        <div class="logo-text">
+            <h2>Jelajah Sistem Saraf</h2>
+            <small>IPA SMP Kelas 9</small>
+        </div>
+    </div>
+
+    <div class="score-box">
+        ⭐ Skor: <span id="score">0</span>
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+PROGRESS BAR
+===================================================== -->
+
+<div class="progress-area" id="progressArea">
+
+    <div class="progress-info">
+        <span id="progressText">Level 1</span>
+        <span id="progressPercent">0%</span>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+HALAMAN BERANDA
+===================================================== -->
+
+<section class="screen active" id="home">
+
+    <div class="hero">
+
+        <div class="brain">
+            🧠
+        </div>
+
+        <h1>Jelajah Sistem Saraf</h1>
+
+        <h3>Game Interaktif IPA Kelas 9</h3>
+
+        <p>
+            Yuk jelajahi dunia sistem saraf manusia!
+            Kenali otak, neuron, gerak refleks, dan bagaimana
+            tubuh kita menerima serta merespons rangsangan.
+        </p>
+
+        <div class="menu-buttons">
+
+            <button class="btn btn-primary"
+                    onclick="startGame()">
+                🚀 MULAI PETUALANGAN
+            </button>
+
+            <button class="btn btn-orange"
+                    onclick="showScreen('instruction')">
+                📖 PETUNJUK
+            </button>
+
+            <button class="btn btn-light"
+                    onclick="showScreen('material')">
+                🧬 MATERI SINGKAT
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+PETUNJUK
+===================================================== -->
+
+<section class="screen" id="instruction">
+
+    <h2 class="section-title">
+        📖 Petunjuk Permainan
+    </h2>
+
+    <div class="card">
+
+        <ul class="instruction-list">
+
+            <li>
+                🎯 <strong>Tujuan:</strong>
+                Selesaikan semua misi untuk menguasai materi
+                Sistem Saraf Manusia.
+            </li>
+
+            <li>
+                ⭐ <strong>Skor:</strong>
+                Jawaban benar mendapatkan poin.
+            </li>
+
+            <li>
+                🧠 <strong>Level 1:</strong>
+                Tebak gambar bagian sistem saraf.
+            </li>
+
+            <li>
+                🖱️ <strong>Level 2:</strong>
+                Cocokkan bagian neuron dengan fungsinya.
+            </li>
+
+            <li>
+                📝 <strong>Level 3:</strong>
+                Jawab 10 soal pilihan ganda.
+            </li>
+
+            <li>
+                🔄 <strong>Level 4:</strong>
+                Susun jalannya impuls pada gerak refleks.
+            </li>
+
+            <li>
+                🔥 <strong>Level 5:</strong>
+                Selesaikan tantangan HOTS.
+            </li>
+
+        </ul>
+
+    </div>
+
+    <button class="btn btn-light"
+            onclick="showScreen('home')">
+        ← Kembali
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+MATERI
+===================================================== -->
+
+<section class="screen" id="material">
+
+    <h2 class="section-title">
+        🧬 Materi Singkat
+    </h2>
+
+    <div class="material-grid">
+
+        <div class="material-card">
+
+            <h3>🧠 Sistem Saraf</h3>
+
+            <p>
+                Sistem saraf adalah sistem koordinasi tubuh
+                yang menerima rangsangan, mengolah informasi,
+                dan menghasilkan respons.
+            </p>
+
+        </div>
+
+
+        <div class="material-card">
+
+            <h3>⚙️ Fungsi</h3>
+
+            <p>
+                Menerima rangsangan, mengolah informasi,
+                mengatur aktivitas tubuh, dan menghasilkan
+                respons terhadap rangsangan.
+            </p>
+
+        </div>
+
+
+        <div class="material-card">
+
+            <h3>🧠 Sistem Saraf Pusat</h3>
+
+            <p>
+                Terdiri atas otak dan sumsum tulang belakang.
+                Keduanya berperan sebagai pusat pengolahan
+                informasi saraf.
+            </p>
+
+        </div>
+
+
+        <div class="material-card">
+
+            <h3>🔌 Sistem Saraf Tepi</h3>
+
+            <p>
+                Menghubungkan sistem saraf pusat dengan
+                reseptor dan efektor di seluruh tubuh.
+            </p>
+
+        </div>
+
+
+        <div class="material-card">
+
+            <h3>🌿 Neuron</h3>
+
+            <p>
+                Neuron merupakan sel saraf yang berfungsi
+                menerima dan menghantarkan impuls.
+            </p>
+
+        </div>
+
+
+        <div class="material-card">
+
+            <h3>⚡ Gerak Refleks</h3>
+
+            <p>
+                Gerak refleks adalah respons cepat dan
+                otomatis terhadap rangsangan.
+            </p>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <button class="btn btn-light"
+            onclick="showScreen('home')">
+        ← Kembali
+    </button>
+
+</section>
+
+
+<!-- =====================================================
+LEVEL 1
+===================================================== -->
+
+<section class="screen" id="level1">
+
+    <div class="level-header">
+
+        <span class="level-number">
+            LEVEL 1
+        </span>
+
+        <h2>🔎 Tebak Gambar</h2>
+
+        <p>
+            Amati gambar kemudian pilih jawaban yang tepat.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="question-number">
+            Pertanyaan <span id="imageQuestionNumber">1</span> dari 4
+        </div>
+
+        <h3 id="imageQuestion">
+            Bagian neuron yang berfungsi menerima impuls
+            dari neuron lain adalah...
+        </h3>
+
+    </div>
+
+
+    <div class="neuron-visual">
+
+        <svg class="neuron-svg"
+             viewBox="0 0 600 250">
+
+            <!-- DENDRIT -->
+
+            <g stroke="#087f9c"
+               stroke-width="7"
+               fill="none"
+               stroke-linecap="round">
+
+                <path d="M230 120 C180 80 130 60 80 40"/>
+                <path d="M230 125 C170 120 120 110 55 100"/>
+                <path d="M230 130 C170 150 120 175 65 205"/>
+
+                <path d="M125 70 L95 35"/>
+                <path d="M150 85 L125 45"/>
+                <path d="M120 160 L85 190"/>
+
+            </g>
+
+
+            <!-- BADAN SEL -->
+
+            <circle cx="260"
+                    cy="125"
+                    r="55"
+                    fill="#ff9f43"/>
+
+            <circle cx="260"
+                    cy="125"
+                    r="18"
+                    fill="#fff"/>
+
+
+            <!-- AKSON -->
+
+            <path d="M315 125 C380 125 430 125 530 125"
+                  stroke="#0a9b73"
+                  stroke-width="9"
+                  fill="none"
+                  stroke-linecap="round"/>
+
+
+            <!-- SELUBUNG MIELIN -->
+
+            <g fill="#8fd3c1">
+
+                <ellipse cx="355"
+                         cy="125"
+                         rx="25"
+                         ry="14"/>
+
+                <ellipse cx="410"
+                         cy="125"
+                         rx="25"
+                         ry="14"/>
+
+                <ellipse cx="465"
+                         cy="125"
+                         rx="25"
+                         ry="14"/>
+
+            </g>
+
+
+            <!-- UJUNG AKSON -->
+
+            <circle cx="535"
+                    cy="125"
+                    r="9"
+                    fill="#e85d5d"/>
+
+        </svg>
+
+    </div>
+
+
+    <div class="answer-grid"
+         id="imageAnswers">
+    </div>
+
+
+    <div class="feedback"
+         id="imageFeedback">
+    </div>
+
+
+    <div class="navigation">
+
+        <button class="btn btn-light"
+                onclick="showScreen('home')">
+            🏠 Beranda
+        </button>
+
+        <button class="btn btn-primary"
+                id="imageNext"
+                onclick="nextImageQuestion()"
+                disabled>
+            Berikutnya →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+LEVEL 2
+===================================================== -->
+
+<section class="screen" id="level2">
+
+    <div class="level-header">
+
+        <span class="level-number">
+            LEVEL 2
+        </span>
+
+        <h2>🖱️ Cocokkan Neuron</h2>
+
+        <p>
+            Seret bagian neuron ke fungsi yang sesuai.
+        </p>
+
+    </div>
+
+
+    <div class="drag-area">
+
+        <div>
+
+            <div class="card">
+
+                <h3>
+                    🧩 Bagian Neuron
+                </h3>
+
+                <div class="drag-items">
+
+                    <div class="drag-item"
+                         draggable="true"
+                         data-answer="dendrit">
+                        Dendrit
+                    </div>
+
+                    <div class="drag-item"
+                         draggable="true"
+                         data-answer="badansel">
+                        Badan Sel
+                    </div>
+
+                    <div class="drag-item"
+                         draggable="true"
+                         data-answer="akson">
+                        Akson
+                    </div>
+
+                    <div class="drag-item"
+                         draggable="true"
+                         data-answer="mielin">
+                        Selubung Mielin
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="card">
+
+                <h3>
+                    🎯 Fungsi
+                </h3>
+
+
+                <div class="drop-zone"
+                     data-answer="dendrit">
+
+                    <strong>Dendrit</strong>
+
+                    Menerima impuls dari reseptor
+                    atau neuron lain.
+
+                </div>
+
+
+                <div class="drop-zone"
+                     data-answer="badansel">
+
+                    <strong>Badan Sel</strong>
+
+                    Mengatur aktivitas sel saraf
+                    dan mengandung inti sel.
+
+                </div>
+
+
+                <div class="drop-zone"
+                     data-answer="akson">
+
+                    <strong>Akson</strong>
+
+                    Menghantarkan impuls menjauhi
+                    badan sel.
+
+                </div>
+
+
+                <div class="drop-zone"
+                     data-answer="mielin">
+
+                    <strong>Selubung Mielin</strong>
+
+                    Melindungi akson dan membantu
+                    mempercepat penghantaran impuls.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="feedback"
+         id="dragFeedback">
+    </div>
+
+
+    <div class="navigation">
+
+        <button class="btn btn-light"
+                onclick="showScreen('home')">
+            🏠 Beranda
+        </button>
+
+        <button class="btn btn-primary"
+                id="dragNext"
+                onclick="startLevel3()"
+                disabled>
+            Level 3 →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+LEVEL 3
+===================================================== -->
+
+<section class="screen" id="level3">
+
+    <div class="level-header">
+
+        <span class="level-number">
+            LEVEL 3
+        </span>
+
+        <h2>📝 Tantangan Pilihan Ganda</h2>
+
+        <p>
+            Jawablah 10 pertanyaan berikut.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="question-number">
+
+            Soal
+            <span id="mcNumber">1</span>
+            dari 10
+
+        </div>
+
+        <div class="hots-question"
+             id="mcQuestion">
+        </div>
+
+        <div class="answer-grid"
+             id="mcAnswers">
+        </div>
+
+        <div class="feedback"
+             id="mcFeedback">
+        </div>
+
+    </div>
+
+
+    <div class="navigation">
+
+        <button class="btn btn-light"
+                onclick="showScreen('home')">
+            🏠 Beranda
+        </button>
+
+        <button class="btn btn-primary"
+                id="mcNext"
+                onclick="nextMCQuestion()"
+                disabled>
+            Berikutnya →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+LEVEL 4
+===================================================== -->
+
+<section class="screen" id="level4">
+
+    <div class="level-header">
+
+        <span class="level-number">
+            LEVEL 4
+        </span>
+
+        <h2>⚡ Tantangan Gerak Refleks</h2>
+
+        <p>
+            Susun jalannya impuls dengan urutan yang benar.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            🔄 Urutkan dengan benar
+        </h3>
+
+        <p style="margin:10px 0 20px;color:#60798b;">
+            Klik item sesuai urutan jalannya impuls.
+        </p>
+
+
+        <div class="sequence-area"
+             id="sequenceArea">
+
+        </div>
+
+
+        <div class="feedback"
+             id="sequenceFeedback">
+        </div>
+
+    </div>
+
+
+    <div class="navigation">
+
+        <button class="btn btn-light"
+                onclick="showScreen('home')">
+            🏠 Beranda
+        </button>
+
+        <button class="btn btn-primary"
+                onclick="checkSequence()">
+            ✓ Periksa Jawaban
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+LEVEL 5
+===================================================== -->
+
+<section class="screen" id="level5">
+
+    <div class="level-header">
+
+        <span class="level-number">
+            LEVEL 5
+        </span>
+
+        <h2>🔥 Misi Akhir HOTS</h2>
+
+        <p>
+            Gunakan pemahamanmu untuk menyelesaikan masalah
+            dalam kehidupan sehari-hari.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="question-number">
+
+            Tantangan
+            <span id="hotsNumber">1</span>
+            dari 5
+
+        </div>
+
+
+        <div class="hots-question"
+             id="hotsQuestion">
+        </div>
+
+
+        <div class="answer-grid"
+             id="hotsAnswers">
+        </div>
+
+
+        <div class="feedback"
+             id="hotsFeedback">
+        </div>
+
+    </div>
+
+
+    <div class="navigation">
+
+        <button class="btn btn-light"
+                onclick="showScreen('home')">
+            🏠 Beranda
+        </button>
+
+        <button class="btn btn-primary"
+                id="hotsNext"
+                onclick="nextHOTSQuestion()"
+                disabled>
+            Berikutnya →
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+HASIL
+===================================================== -->
+
+<section class="screen" id="result">
+
+    <div class="result-card">
+
+        <div class="result-icon">
+            🏆
+        </div>
+
+        <h2 class="section-title">
+            Misi Selesai!
+        </h2>
+
+        <p>
+            Selamat! Kamu telah menyelesaikan
+            permainan Jelajah Sistem Saraf.
+        </p>
+
+
+        <div class="final-score"
+             id="finalScore">
+            0
+        </div>
+
+
+        <div class="rank"
+             id="rank">
+        </div>
+
+
+        <div class="result-message"
+             id="resultMessage">
+        </div>
+
+
+        <button class="btn btn-primary"
+                onclick="restartGame()">
+            🔄 Main Lagi
+        </button>
+
+        <button class="btn btn-light"
+                onclick="showScreen('home')">
+            🏠 Kembali ke Beranda
+        </button>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    Jelajah Sistem Saraf • IPA SMP Kelas 9
+
+</footer>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+DATA GAME
+========================================================= */
+
+let score = 0;
+
+let imageIndex = 0;
+let mcIndex = 0;
+let hotsIndex = 0;
+
+let imageAnswered = false;
+let mcAnswered = false;
+let hotsAnswered = false;
+
+let sequenceSelected = [];
+
+
+/* =========================================================
+NAVIGASI
+========================================================= */
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen")
+        .forEach(screen => {
+            screen.classList.remove("active");
+        });
+
+    document.getElementById(id)
+        .classList.add("active");
+
+    updateProgress();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================================================
+UPDATE SKOR
+========================================================= */
+
+function updateScore(points) {
+
+    score += points;
+
+    if(score < 0) {
+        score = 0;
+    }
+
+    document.getElementById("score")
+        .textContent = score;
+
+}
+
+
+/* =========================================================
+START GAME
+========================================================= */
+
+function startGame() {
+
+    score = 0;
+
+    imageIndex = 0;
+    mcIndex = 0;
+    hotsIndex = 0;
+
+    document.getElementById("score")
+        .textContent = "0";
+
+    loadImageQuestion();
+
+    showScreen("level1");
+
+}
+
+
+/* =========================================================
+PROGRESS
+========================================================= */
+
+function updateProgress() {
+
+    const active =
+        document.querySelector(".screen.active");
+
+    const progressArea =
+        document.getElementById("progressArea");
+
+    const screens = [
+        "level1",
+        "level2",
+        "level3",
+        "level4",
+        "level5"
+    ];
+
+    if(!screens.includes(active.id)) {
+
+        progressArea.style.display = "none";
+
+        return;
+    }
+
+    progressArea.style.display = "block";
+
+    const index =
+        screens.indexOf(active.id);
+
+    const percent =
+        ((index + 1) / screens.length) * 100;
+
+    document.getElementById("progressFill")
+        .style.width = percent + "%";
+
+    document.getElementById("progressPercent")
+        .textContent = Math.round(percent) + "%";
+
+    document.getElementById("progressText")
+        .textContent =
+        "Level " + (index + 1);
+
+}
+
+
+/* =========================================================
+LEVEL 1 DATA
+========================================================= */
+
+const imageQuestions = [
+
+    {
+        question:
+        "Bagian neuron yang berfungsi menerima impuls dari neuron lain adalah...",
+
+        answers:
+        ["Dendrit","Akson","Badan sel","Selubung mielin"],
+
+        correct: 0
+    },
+
+    {
+        question:
+        "Organ yang menjadi pusat pengaturan dan pengolahan informasi sistem saraf adalah...",
+
+        answers:
+        ["Kulit","Otak","Lambung","Jantung"],
+
+        correct: 1
+    },
+
+    {
+        question:
+        "Bagian sistem saraf pusat yang berada di dalam ruas-ruas tulang belakang adalah...",
+
+        answers:
+        ["Sumsum tulang belakang","Saraf sensorik","Dendrit","Otak kecil"],
+
+        correct: 0
+    },
+
+    {
+        question:
+        "Bagian neuron yang menghantarkan impuls menjauhi badan sel adalah...",
+
+        answers:
+        ["Dendrit","Akson","Inti sel","Reseptor"],
+
+        correct: 1
+    }
+
+];
+
+
+/* =========================================================
+LOAD LEVEL 1
+========================================================= */
+
+function loadImageQuestion() {
+
+    const q =
+        imageQuestions[imageIndex];
+
+    imageAnswered = false;
+
+    document.getElementById("imageQuestionNumber")
+        .textContent = imageIndex + 1;
+
+    document.getElementById("imageQuestion")
+        .textContent = q.question;
+
+    const container =
+        document.getElementById("imageAnswers");
+
+    container.innerHTML = "";
+
+    q.answers.forEach((answer,index) => {
+
+        const btn =
+            document.createElement("button");
+
+        btn.className = "answer-btn";
+
+        btn.textContent = answer;
+
+        btn.onclick =
+            () => answerImage(index,btn);
+
+        container.appendChild(btn);
+
+    });
+
+    document.getElementById("imageFeedback")
+        .className = "feedback";
+
+    document.getElementById("imageNext")
+        .disabled = true;
+
+}
+
+
+/* =========================================================
+ANSWER LEVEL 1
+========================================================= */
+
+function answerImage(index,button) {
+
+    if(imageAnswered) return;
+
+    imageAnswered = true;
+
+    const q =
+        imageQuestions[imageIndex];
+
+    const buttons =
+        document.querySelectorAll("#imageAnswers .answer-btn");
+
+    buttons.forEach(b => b.disabled = true);
+
+    const feedback =
+        document.getElementById("imageFeedback");
+
+    if(index === q.correct) {
+
+        button.classList.add("correct");
+
+        feedback.textContent =
+            "✅ Benar! Kamu mendapatkan 5 poin.";
+
+        feedback.className =
+            "feedback show correct";
+
+        updateScore(5);
+
+    } else {
+
+        button.classList.add("wrong");
+
+        buttons[q.correct]
+            .classList.add("correct");
+
+        feedback.textContent =
+            "❌ Belum tepat. Jawaban yang benar adalah: "
+            + q.answers[q.correct];
+
+        feedback.className =
+            "feedback show wrong";
+    }
+
+    document.getElementById("imageNext")
+        .disabled = false;
+
+}
+
+
+/* =========================================================
+NEXT LEVEL 1
+========================================================= */
+
+function nextImageQuestion() {
+
+    imageIndex++;
+
+    if(imageIndex >= imageQuestions.length) {
+
+        initDragDrop();
+
+        showScreen("level2");
+
+    } else {
+
+        loadImageQuestion();
+
+    }
+
+}
+
+
+/* =========================================================
+LEVEL 2 DRAG DROP
+========================================================= */
+
+function initDragDrop() {
+
+    const items =
+        document.querySelectorAll(".drag-item");
+
+    const zones =
+        document.querySelectorAll(".drop-zone");
+
+    items.forEach(item => {
+
+        item.addEventListener("dragstart", e => {
+
+            e.dataTransfer.setData(
+                "text/plain",
+                item.dataset.answer
+            );
+
+        });
+
+    });
+
+
+    zones.forEach(zone => {
+
+        zone.addEventListener("dragover", e => {
+
+            e.preventDefault();
+
+            zone.classList.add("over");
+
+        });
+
+
+        zone.addEventListener("dragleave", () => {
+
+            zone.classList.remove("over");
+
+        });
+
+
+        zone.addEventListener("drop", e => {
+
+            e.preventDefault();
+
+            zone.classList.remove("over");
+
+            const answer =
+                e.dataTransfer.getData("text/plain");
+
+            if(answer === zone.dataset.answer) {
+
+                zone.style.borderColor =
+                    "#0a9b73";
+
+                zone.style.background =
+                    "#e4faef";
+
+                zone.dataset.completed = "true";
+
+                updateScore(5);
+
+                const item =
+                    document.querySelector(
+                        `.drag-item[data-answer="${answer}"]`
+                    );
+
+                if(item) {
+
+                    item.style.opacity = "0.45";
+
+                    item.draggable = false;
+
+                }
+
+                checkDragComplete();
+
+            } else {
+
+                const feedback =
+                    document.getElementById("dragFeedback");
+
+                feedback.textContent =
+                    "❌ Belum tepat. Coba cocokkan lagi.";
+
+                feedback.className =
+                    "feedback show wrong";
+
+            }
+
+        });
+
+    });
+
+}
+
+
+/* =========================================================
+CHECK DRAG
+========================================================= */
+
+function checkDragComplete() {
+
+    const completed =
+        document.querySelectorAll(
+            '.drop-zone[data-completed="true"]'
+        ).length;
+
+    if(completed === 4) {
+
+        const feedback =
+            document.getElementById("dragFeedback");
+
+        feedback.textContent =
+            "🎉 Hebat! Semua bagian neuron berhasil dicocokkan.";
+
+        feedback.className =
+            "feedback show correct";
+
+        document.getElementById("dragNext")
+            .disabled = false;
+
+    }
+
+}
+
+
+/* =========================================================
+LEVEL 3 DATA
+========================================================= */
+
+const mcQuestions = [
+
+    {
+        q:"Sistem saraf pusat terdiri atas...",
+
+        a:[
+            "Otak dan sumsum tulang belakang",
+            "Otak dan saraf tepi",
+            "Saraf sensorik dan motorik",
+            "Reseptor dan efektor"
+        ],
+
+        c:0
+    },
+
+    {
+        q:"Neuron yang membawa impuls dari reseptor menuju sistem saraf pusat disebut...",
+
+        a:[
+            "Neuron motorik",
+            "Neuron sensorik",
+            "Neuron konektor",
+            "Neuron efektor"
+        ],
+
+        c:1
+    },
+
+    {
+        q:"Fungsi utama sumsum tulang belakang salah satunya adalah...",
+
+        a:[
+            "Menghasilkan hormon",
+            "Mengatur pencernaan",
+            "Pusat gerak refleks",
+            "Menghasilkan sel darah"
+        ],
+
+        c:2
+    },
+
+    {
+        q:"Gerak menarik tangan setelah menyentuh benda panas merupakan contoh...",
+
+        a:[
+            "Gerak sadar",
+            "Gerak refleks",
+            "Gerak semu",
+            "Gerak pasif"
+        ],
+
+        c:1
+    },
+
+    {
+        q:"Bagian neuron yang dilindungi oleh selubung mielin adalah...",
+
+        a:[
+            "Dendrit",
+            "Akson",
+            "Badan sel",
+            "Inti sel"
+        ],
+
+        c:1
+    },
+
+    {
+        q:"Otak kecil terutama berperan dalam...",
+
+        a:[
+            "Keseimbangan dan koordinasi gerak",
+            "Menghasilkan urine",
+            "Mengatur kadar gula",
+            "Mencerna makanan"
+        ],
+
+        c:0
+    },
+
+    {
+        q:"Penerima rangsangan dari lingkungan disebut...",
+
+        a:[
+            "Efektor",
+            "Reseptor",
+            "Akson",
+            "Sumsum"
+        ],
+
+        c:1
+    },
+
+    {
+        q:"Otot dan kelenjar yang memberikan respons terhadap rangsangan disebut...",
+
+        a:[
+            "Reseptor",
+            "Neuron sensorik",
+            "Efektor",
+            "Dendrit"
+        ],
+
+        c:2
+    },
+
+    {
+        q:"Jika seseorang melihat cahaya terang lalu mengecilkan pupil, respons tersebut melibatkan sistem...",
+
+        a:[
+            "Saraf",
+            "Pencernaan",
+            "Ekskresi",
+            "Rangka"
+        ],
+
+        c:0
+    },
+
+    {
+        q:"Impuls saraf dapat berpindah dari satu neuron ke neuron lain melalui bagian yang disebut...",
+
+        a:[
+            "Sinapsis",
+            "Tendon",
+            "Ligamen",
+            "Alveolus"
+        ],
+
+        c:0
+    }
+
+];
+
+
+/* =========================================================
+START LEVEL 3
+========================================================= */
+
+function startLevel3() {
+
+    mcIndex = 0;
+
+    loadMCQuestion();
+
+    showScreen("level3");
+
+}
+
+
+/* =========================================================
+LOAD MC
+========================================================= */
+
+function loadMCQuestion() {
+
+    const q =
+        mcQuestions[mcIndex];
+
+    mcAnswered = false;
+
+    document.getElementById("mcNumber")
+        .textContent = mcIndex + 1;
+
+    document.getElementById("mcQuestion")
+        .textContent = q.q;
+
+    const container =
+        document.getElementById("mcAnswers");
+
+    container.innerHTML = "";
+
+    q.a.forEach((answer,index) => {
+
+        const btn =
+            document.createElement("button");
+
+        btn.className = "answer-btn";
+
+        btn.textContent =
+            String.fromCharCode(65 + index)
+            + ". "
+            + answer;
+
+        btn.onclick =
+            () => answerMC(index,btn);
+
+        container.appendChild(btn);
+
+    });
+
+    document.getElementById("mcFeedback")
+        .className = "feedback";
+
+    document.getElementById("mcNext")
+        .disabled = true;
+
+}
+
+
+/* =========================================================
+ANSWER MC
+========================================================= */
+
+function answerMC(index,button) {
+
+    if(mcAnswered) return;
+
+    mcAnswered = true;
+
+    const q =
+        mcQuestions[mcIndex];
+
+    const buttons =
+        document.querySelectorAll("#mcAnswers .answer-btn");
+
+    buttons.forEach(b => b.disabled = true);
+
+    const feedback =
+        document.getElementById("mcFeedback");
+
+    if(index === q.c) {
+
+        button.classList.add("correct");
+
+        feedback.textContent =
+            "✅ Benar! +5 poin.";
+
+        feedback.className =
+            "feedback show correct";
+
+        updateScore(5);
+
+    } else {
+
+        button.classList.add("wrong");
+
+        buttons[q.c]
+            .classList.add("correct");
+
+        feedback.textContent =
+            "❌ Jawaban yang benar: "
+            + q.a[q.c];
+
+        feedback.className =
+            "feedback show wrong";
+
+    }
+
+    document.getElementById("mcNext")
+        .disabled = false;
+
+}
+
+
+/* =========================================================
+NEXT MC
+========================================================= */
+
+function nextMCQuestion() {
+
+    mcIndex++;
+
+    if(mcIndex >= mcQuestions.length) {
+
+        initSequence();
+
+        showScreen("level4");
+
+    } else {
+
+        loadMCQuestion();
+
+    }
+
+}
+
+
+/* =========================================================
+LEVEL 4 SEQUENCE
+========================================================= */
+
+const sequenceData = [
+
+    "Reseptor",
+    "Neuron Sensorik",
+    "Sumsum Tulang Belakang",
+    "Neuron Motorik",
+    "Efektor"
+
+];
+
+
+/* =========================================================
+INIT SEQUENCE
+========================================================= */
+
+function initSequence() {
+
+    sequenceSelected = [];
+
+    const area =
+        document.getElementById("sequenceArea");
+
+    area.innerHTML = "";
+
+    const shuffled =
+        [...sequenceData]
+        .sort(() => Math.random() - 0.5);
+
+    shuffled.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "sequence-item";
+
+        div.dataset.value =
+            item;
+
+        div.innerHTML = `
+            <span>${item}</span>
+            <span class="sequence-number">+</span>
+        `;
+
+        div.onclick =
+            () => selectSequence(div,item);
+
+        area.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================================================
+SELECT SEQUENCE
+========================================================= */
+
+function selectSequence(element,value) {
+
+    if(element.classList.contains("selected"))
+        return;
+
+    sequenceSelected.push(value);
+
+    element.classList.add("selected");
+
+    element.style.background =
+        "#e8f8f2";
+
+    element.querySelector(".sequence-number")
+        .textContent =
+        sequenceSelected.length;
+
+}
+
+
+/* =========================================================
+CHECK SEQUENCE
+========================================================= */
+
+function checkSequence() {
+
+    const feedback =
+        document.getElementById("sequenceFeedback");
+
+    if(sequenceSelected.length !== 5) {
+
+        feedback.textContent =
+            "⚠️ Pilih semua bagian terlebih dahulu.";
+
+        feedback.className =
+            "feedback show wrong";
+
+        return;
+
+    }
+
+    const correct =
+        sequenceData.every(
+            (value,index) =>
+            value === sequenceSelected[index]
+        );
+
+    if(correct) {
+
+        updateScore(15);
+
+        feedback.textContent =
+            "🎉 Luar biasa! Urutan gerak refleks benar. +15 poin.";
+
+        feedback.className =
+            "feedback show correct";
+
+        setTimeout(() => {
+
+            initHOTS();
+
+            showScreen("level5");
+
+        },1000);
+
+    } else {
+
+        feedback.textContent =
+            "❌ Urutan masih belum tepat. Coba lagi.";
+
+        feedback.className =
+            "feedback show wrong";
+
+    }
+
+}
+
+
+/* =========================================================
+LEVEL 5 HOTS
+========================================================= */
+
+const hotsQuestions = [
+
+    {
+        q:
+        "Ketika tangan tidak sengaja menyentuh benda panas, tangan segera ditarik sebelum seseorang menyadari rasa sakit secara penuh. Mengapa hal ini dapat terjadi?",
+
+        a:[
+            "Karena impuls refleks diproses cepat melalui sumsum tulang belakang",
+            "Karena otak tidak berfungsi",
+            "Karena otot tidak membutuhkan saraf",
+            "Karena reseptor langsung menggerakkan otot"
+        ],
+
+        c:0
+    },
+
+
+    {
+        q:
+        "Seorang siswa berdiri di atas satu kaki. Ia dapat mempertahankan keseimbangan tubuhnya karena kerja bagian otak tertentu. Bagian tersebut adalah...",
+
+        a:[
+            "Otak besar",
+            "Otak kecil",
+            "Sumsum tulang belakang",
+            "Saraf tepi"
+        ],
+
+        c:1
+    },
+
+
+    {
+        q:
+        "Ketika seseorang melihat makanan favorit, air liurnya dapat meningkat. Peristiwa tersebut menunjukkan bahwa sistem saraf berperan dalam...",
+
+        a:[
+            "Menghasilkan tulang",
+            "Mengkoordinasikan respons tubuh terhadap rangsangan",
+            "Menghancurkan sel saraf",
+            "Menghentikan kerja organ"
+        ],
+
+        c:1
+    },
+
+
+    {
+        q:
+        "Jika selubung mielin pada suatu neuron mengalami kerusakan, kemungkinan yang terjadi adalah...",
+
+        a:[
+            "Penghantaran impuls dapat terganggu",
+            "Darah berhenti mengalir",
+            "Neuron berubah menjadi otot",
+            "Reseptor tidak pernah menerima rangsangan"
+        ],
+
+        c:0
+    },
+
+
+    {
+        q:
+        "Mengapa gerak refleks penting bagi tubuh manusia?",
+
+        a:[
+            "Karena membuat semua gerakan menjadi sadar",
+            "Karena memberikan respons cepat untuk membantu melindungi tubuh",
+            "Karena menghentikan semua impuls saraf",
+            "Karena membuat otak tidak bekerja"
+        ],
+
+        c:1
+    }
+
+];
+
+
+/* =========================================================
+INIT HOTS
+========================================================= */
+
+function initHOTS() {
+
+    hotsIndex = 0;
+
+    loadHOTSQuestion();
+
+}
+
+
+/* =========================================================
+LOAD HOTS
+========================================================= */
+
+function loadHOTSQuestion() {
+
+    const q =
+        hotsQuestions[hotsIndex];
+
+    hotsAnswered = false;
+
+    document.getElementById("hotsNumber")
+        .textContent = hotsIndex + 1;
+
+    document.getElementById("hotsQuestion")
+        .textContent = q.q;
+
+    const container =
+        document.getElementById("hotsAnswers");
+
+    container.innerHTML = "";
+
+    q.a.forEach((answer,index) => {
+
+        const btn =
+            document.createElement("button");
+
+        btn.className =
+            "answer-btn";
+
+        btn.textContent =
+            String.fromCharCode(65 + index)
+            + ". "
+            + answer;
+
+        btn.onclick =
+            () => answerHOTS(index,btn);
+
+        container.appendChild(btn);
+
+    });
+
+    document.getElementById("hotsFeedback")
+        .className = "feedback";
+
+    document.getElementById("hotsNext")
+        .disabled = true;
+
+}
+
+
+/* =========================================================
+ANSWER HOTS
+========================================================= */
+
+function answerHOTS(index,button) {
+
+    if(hotsAnswered) return;
+
+    hotsAnswered = true;
+
+    const q =
+        hotsQuestions[hotsIndex];
+
+    const buttons =
+        document.querySelectorAll("#hotsAnswers .answer-btn");
+
+    buttons.forEach(b => b.disabled = true);
+
+    const feedback =
+        document.getElementById("hotsFeedback");
+
+    if(index === q.c) {
+
+        button.classList.add("correct");
+
+        feedback.textContent =
+            "🔥 Tepat! Analisis kamu benar. +10 poin.";
+
+        feedback.className =
+            "feedback show correct";
+
+        updateScore(10);
+
+    } else {
+
+        button.classList.add("wrong");
+
+        buttons[q.c]
+            .classList.add("correct");
+
+        feedback.textContent =
+            "❌ Belum tepat. Jawaban yang benar adalah: "
+            + q.a[q.c];
+
+        feedback.className =
+            "feedback show wrong";
+
+    }
+
+    document.getElementById("hotsNext")
+        .disabled = false;
+
+}
+
+
+/* =========================================================
+NEXT HOTS
+========================================================= */
+
+function nextHOTSQuestion() {
+
+    hotsIndex++;
+
+    if(hotsIndex >= hotsQuestions.length) {
+
+        showResult();
+
+    } else {
+
+        loadHOTSQuestion();
+
+    }
+
+}
+
+
+/* =========================================================
+HASIL
+========================================================= */
+
+function showResult() {
+
+    showScreen("result");
+
+    document.getElementById("finalScore")
+        .textContent = score;
+
+    let rank = "";
+    let message = "";
+
+    /*
+       Skor maksimal:
+       Level 1 = 20
+       Level 2 = 20
+       Level 3 = 50
+       Level 4 = 15
+       Level 5 = 50
+
+       Total teoritis = 155.
+
+       Untuk kategori 0-100,
+       skor dikonversi.
+    */
+
+    const finalScore =
+        Math.min(
+            100,
+            Math.round(
+                (score / 155) * 100
+            )
+        );
+
+    document.getElementById("finalScore")
+        .textContent = finalScore;
+
+
+    if(finalScore >= 90) {
+
+        rank =
+            "🏆 Ahli Sistem Saraf";
+
+        message =
+            "Luar biasa! Kamu sudah memahami konsep sistem saraf dengan sangat baik.";
+
+    } else if(finalScore >= 75) {
+
+        rank =
+            "🌟 Penjelajah Hebat";
+
+        message =
+            "Hebat! Pemahamanmu sudah baik. Tingkatkan lagi pada konsep yang masih belum dikuasai.";
+
+    } else if(finalScore >= 60) {
+
+        rank =
+            "🔬 Calon Ilmuwan";
+
+        message =
+            "Bagus! Kamu sudah memiliki dasar pemahaman. Yuk pelajari kembali materi sistem saraf.";
+
+    } else {
+
+        rank =
+            "📚 Ayo Belajar Lagi";
+
+        message =
+            "Jangan menyerah! Pelajari kembali materi kemudian coba permainan ini lagi.";
+
+    }
+
+
+    document.getElementById("rank")
+        .textContent = rank;
+
+    document.getElementById("resultMessage")
+        .textContent = message;
+
+}
+
+
+/* =========================================================
+RESTART
+========================================================= */
+
+function restartGame() {
+
+    score = 0;
+
+    document.getElementById("score")
+        .textContent = "0";
+
+    startGame();
+
+}
+
+
+/* =========================================================
+INITIALIZE
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        updateProgress();
+
+        initDragDrop();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
